@@ -30,7 +30,11 @@ module RailsERD
         end
 
         def abstract_from_models(domain, models)
-          models.select(&:abstract_class?).collect(&:descendants).flatten.collect { |model|
+          models.select(&:abstract_class?).
+                 collect(&:descendants).
+                 flatten.
+                 select  { |model| domain.entity_by_name(model.name) }.
+                 collect { |model|
             new(domain, domain.entity_by_name(model.superclass.name), domain.entity_by_name(model.name))
           }
         end
